@@ -26,6 +26,7 @@ const CastMindApp: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [darkMode, setDarkMode] = useState(false); // 个性功能：深色模式
 
   // 模拟数据
   const mockFeeds: Feed[] = [
@@ -267,7 +268,7 @@ const CastMindApp: React.FC = () => {
   );
 
   return (
-    <div className="castmind-app">
+    <div className={`castmind-app ${darkMode ? 'dark-mode' : ''}`}>
       {/* 导航栏 */}
       <nav className="navbar">
         <div className="nav-brand">
@@ -276,6 +277,7 @@ const CastMindApp: React.FC = () => {
             <div className="logo-text">
               <h1>CastMind</h1>
               <p>智能内容聚合平台</p>
+              <span className="branch-badge">🎭 个性分支</span>
             </div>
           </div>
         </div>
@@ -302,6 +304,14 @@ const CastMindApp: React.FC = () => {
         </div>
         
         <div className="nav-actions">
+          {/* 个性功能：主题切换 */}
+          <button 
+            className="btn btn-sm" 
+            onClick={() => setDarkMode(!darkMode)}
+            title={darkMode ? '切换到浅色模式' : '切换到深色模式'}
+          >
+            {darkMode ? '☀️ 浅色' : '🌙 深色'}
+          </button>
           <button className="btn btn-sm" onClick={() => window.location.reload()}>
             🔄 刷新
           </button>
