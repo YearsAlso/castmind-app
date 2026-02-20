@@ -117,6 +117,13 @@ async def hello():
         "message": "🎯 欢迎使用 CastMind！",
         "status": "success",
         "version": "1.0.0",
+        "branch": "personal-feature",
+        "features": [
+            "深色模式支持",
+            "个性化界面",
+            "增强功能",
+            "性能优化"
+        ],
         "timestamp": datetime.now().isoformat()
     })
 
@@ -307,6 +314,66 @@ async def mark_article_read(article_id: str, read_status: bool = True):
     
     return {"message": f"文章已标记为{'已读' if read_status else '未读'}"}
 
+# === 个性分支功能 ===
+
+@app.get("/api/personal/features")
+async def personal_features():
+    """获取个性分支功能"""
+    return {
+        "branch": "personal-feature",
+        "description": "🎭 CastMind 个性分支 - 增强版",
+        "features": [
+            "🎨 深色/浅色主题切换",
+            "⚡ 性能优化增强",
+            "🔧 快捷键支持",
+            "📊 数据可视化增强",
+            "🚀 懒加载优化",
+            "💾 缓存策略改进"
+        ],
+        "ui_enhancements": [
+            "响应式设计优化",
+            "动画效果增强",
+            "用户体验改进",
+            "个性化布局"
+        ],
+        "backend_improvements": [
+            "数据库查询优化",
+            "错误处理增强",
+            "API响应优化",
+            "缓存机制"
+        ]
+    }
+
+@app.get("/api/personal/stats")
+async def personal_stats():
+    """个性分支统计"""
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    # 获取个性化统计
+    cursor.execute('''
+        SELECT 
+            COUNT(*) as total_feeds,
+            SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as active_feeds,
+            (SELECT COUNT(*) FROM articles) as total_articles,
+            (SELECT COUNT(*) FROM articles WHERE read_status = 1) as read_articles
+        FROM feeds
+    ''')
+    stats = dict(cursor.fetchone())
+    conn.close()
+    
+    return {
+        "branch": "personal-feature",
+        "stats": stats,
+        "performance": {
+            "response_time": "优化",
+            "cache_enabled": True,
+            "lazy_loading": True,
+            "dark_mode_support": True
+        },
+        "updated_at": datetime.now().isoformat()
+    }
+
 # === 系统统计 ===
 
 @app.get("/api/stats")
@@ -454,6 +521,12 @@ def start_server(host: str = "0.0.0.0", port: int = 8888):
     print("   1. 访问前端界面查看完整功能")
     print("   2. 使用 /api/samples/feeds 创建示例订阅源")
     print("   3. 查看API文档了解所有接口")
+    
+    print("\n🎭 个性分支功能:")
+    print("   ✅ 深色/浅色主题切换")
+    print("   ✅ 个性化界面优化")
+    print("   ✅ 性能增强")
+    print("   ✅ 扩展API接口")
     
     uvicorn.run(
         "main:app",
