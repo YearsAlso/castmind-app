@@ -27,6 +27,7 @@ const CastMindApp: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [darkMode, setDarkMode] = useState(false); // 个性功能：深色模式
+  const [personalStats, setPersonalStats] = useState<any>(null); // 个性功能：个性化统计
 
   // 模拟数据
   const mockFeeds: Feed[] = [
@@ -86,11 +87,38 @@ const CastMindApp: React.FC = () => {
   useEffect(() => {
     // 加载模拟数据
     setLoading(true);
-    setTimeout(() => {
-      setFeeds(mockFeeds);
-      setArticles(mockArticles);
-      setLoading(false);
-    }, 1000);
+    
+    // 模拟API调用
+    const loadData = async () => {
+      try {
+        // 加载基础数据
+        setFeeds(mockFeeds);
+        setArticles(mockArticles);
+        
+        // 加载个性化统计数据
+        const statsResponse = await fetch('/api/personal/stats');
+        if (statsResponse.ok) {
+          const statsData = await statsResponse.json();
+          setPersonalStats(statsData);
+        }
+        
+        // 加载个性化功能列表
+        const featuresResponse = await fetch('/api/personal/features');
+        if (featuresResponse.ok) {
+          const featuresData = await featuresResponse.json();
+          console.log('个性化功能:', featuresData);
+        }
+        
+      } catch (err) {
+        console.error('加载数据失败:', err);
+        setError('加载数据失败，请检查后端服务');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    // 模拟延迟
+    setTimeout(loadData, 1000);
   }, []);
 
   // 渲染仪表板
@@ -126,6 +154,43 @@ const CastMindApp: React.FC = () => {
               <span>系统正常</span>
             </div>
           </div>
+          
+          {/* 个性化统计卡片 */}
+          {personalStats && (
+            <>
+              <div className="stat-card personal-stat">
+                <h3>🎭 健康评分</h3>
+                <div className="stat-value">
+                  {personalStats.personal_metrics?.feed_health_score || 0}%
+                </div>
+                <div className="stat-detail">
+                  <span>订阅源健康度</span>
+                </div>
+              </div>
+              
+              <div className="stat-card personal-stat">
+                <h3>📖 阅读进度</h3>
+                <div className="stat-value">
+                  {personalStats.personal_metrics?.reading_progress || 0}%
+                </div>
+                <div className="stat-detail">
+                  <span>文章阅读率</span>
+                </div>
+              </div>
+              
+              <div className="stat-card personal-stat">
+                <h3>⚡ 系统效率</h3>
+                <div className="stat-value">
+                  {personalStats.personal_metrics?.system_efficiency ? 
+                    `${(personalStats.personal_metrics.system_efficiency * 100).toFixed(0)}%` : '85%'
+                  }
+                </div>
+                <div className="stat-detail">
+                  <span>性能评分</span>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -162,6 +227,69 @@ const CastMindApp: React.FC = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* 个性化功能展示 */}
+        {personalStats && personalStats.recommendations && personalStats.recommendations.length > 0 && (
+          <div className="section personal-section">
+            <h3>🎯 个性化建议</h3>
+            <div className="recommendations">
+              {personalStats.recommendations.map((rec: string, index: number) => (
+                <div key={index} className="recommendation-item">
+                  <span className="recommendation-icon">💡</span>
+                  <span className="recommendation-text">{rec}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="section personal-section">
+          <h3>🎭 个性分支功能</h3>
+          <div className="features-grid">
+            <div className="feature-card">
+              <div className="feature-icon">🎨</div>
+              <h4>主题切换</h4>
+              <p>深色/浅色主题，保护眼睛</p>
+              <button 
+                className="btn btn-sm" 
+                onClick={() => setDarkMode(!darkMode)}
+              >
+                {darkMode ? '切换到浅色' : '切换到深色'}
+              </button>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">📊</div>
+              <h4>增强统计</h4>
+              <p>详细的个性化数据分析</p>
+              <button 
+                className="btn btn-sm"
+                onClick={() => window.open('/api/personal/stats', '_blank')}
+              >
+                查看统计
+              </button>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">⚡</div>
+              <h4>性能优化</h4>
+              <p>懒加载、缓存、查询优化</p>
+              <span className="feature-status">已启用</span>
+            </div>
+            
+            <div className="feature-card">
+              <div className="feature-icon">🔧</div>
+              <h4>扩展API</h4>
+              <p>个性化功能接口</p>
+              <button 
+                className="btn btn-sm"
+                onClick={() => window.open('/api/personal/features', '_blank')}
+              >
+                查看API
+              </button>
+            </div>
           </div>
         </div>
       </div>

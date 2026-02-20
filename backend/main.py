@@ -497,6 +497,164 @@ else:
             }
         })
 
+# === 个性化功能 API ===
+
+@app.get("/api/personal/features")
+async def get_personal_features():
+    """获取个性化功能列表"""
+    return {
+        "branch": "feature/personalization",
+        "version": "1.0.0",
+        "features": [
+            {
+                "name": "主题切换",
+                "description": "深色/浅色主题切换功能",
+                "enabled": True,
+                "endpoint": "/api/personal/theme"
+            },
+            {
+                "name": "个性化统计",
+                "description": "增强的统计数据和可视化",
+                "enabled": True,
+                "endpoint": "/api/personal/stats"
+            },
+            {
+                "name": "快捷键支持",
+                "description": "键盘快捷键支持",
+                "enabled": False,
+                "endpoint": "/api/personal/shortcuts"
+            },
+            {
+                "name": "批量操作",
+                "description": "批量处理订阅源和文章",
+                "enabled": False,
+                "endpoint": "/api/personal/batch"
+            }
+        ],
+        "ui_enhancements": [
+            "深色模式支持",
+            "响应式设计优化",
+            "动画效果增强",
+            "个性化徽章"
+        ],
+        "performance_improvements": [
+            "懒加载优化",
+            "缓存策略改进",
+            "数据库查询优化"
+        ]
+    }
+
+@app.get("/api/personal/stats")
+async def get_personal_stats():
+    """获取个性化统计数据"""
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    # 获取基础统计
+    cursor.execute('SELECT COUNT(*) as total_feeds FROM feeds')
+    total_feeds = cursor.fetchone()['total_feeds']
+    
+    cursor.execute('SELECT COUNT(*) as total_articles FROM articles')
+    total_articles = cursor.fetchone()['total_articles']
+    
+    cursor.execute('''
+        SELECT 
+            COUNT(*) as active_feeds,
+            SUM(CASE WHEN status = 'error' THEN 1 ELSE 0 END) as error_feeds
+        FROM feeds
+    ''')
+    feed_status = dict(cursor.fetchone())
+    
+    cursor.execute('''
+        SELECT 
+            COUNT(*) as total_articles,
+            SUM(CASE WHEN read_status = 1 THEN 1 ELSE 0 END) as read_articles
+        FROM articles
+    ''')
+    article_stats = dict(cursor.fetchone())
+    article_stats['unread_articles'] = article_stats['total_articles'] - article_stats['read_articles']
+    
+    conn.close()
+    
+    # 计算个性化指标
+    return {
+        "branch": "feature/personalization",
+        "timestamp": datetime.now().isoformat(),
+        "basic_stats": {
+            "total_feeds": total_feeds,
+            "total_articles": total_articles,
+            "active_feeds": feed_status.get('active_feeds', 0),
+            "error_feeds": feed_status.get('error_feeds', 0),
+            "read_articles": article_stats.get('read_articles', 0),
+            "unread_articles": article_stats.get('unread_articles', 0)
+        },
+        "personal_metrics": {
+            "feed_health_score": calculate_health_score(feed_status),
+            "reading_progress": calculate_reading_progress(article_stats),
+            "data_freshness": calculate_data_freshness(),
+            "system_efficiency": 0.85  # 模拟系统效率评分
+        },
+        "recommendations": generate_recommendations(feed_status, article_stats)
+    }
+
+def calculate_health_score(feed_status: dict) -> float:
+    """计算订阅源健康评分"""
+    active = feed_status.get('active_feeds', 0)
+    error = feed_status.get('error_feeds', 0)
+    total = active + error
+    
+    if total == 0:
+        return 0.0
+    
+    return round(active / total * 100, 1)
+
+def calculate_reading_progress(article_stats: dict) -> float:
+    """计算阅读进度"""
+    read = article_stats.get('read_articles', 0)
+    total = article_stats.get('total_articles', 0)
+    
+    if total == 0:
+        return 0.0
+    
+    return round(read / total * 100, 1)
+
+def calculate_data_freshness() -> str:
+    """计算数据新鲜度"""
+    # 这里可以添加更复杂的逻辑
+    return "新鲜"  # 简化版本
+
+def generate_recommendations(feed_status: dict, article_stats: dict) -> list:
+    """生成个性化推荐"""
+    recommendations = []
+    
+    if feed_status.get('error_feeds', 0) > 0:
+        recommendations.append("检查并修复错误的订阅源")
+    
+    if article_stats.get('unread_articles', 0) > 10:
+        recommendations.append("清理未读文章，保持阅读进度")
+    
+    if feed_status.get('active_feeds', 0) < 3:
+        recommendations.append("添加更多订阅源以丰富内容")
+    
+    if article_stats.get('total_articles', 0) == 0:
+        recommendations.append("开始抓取订阅源以获取文章")
+    
+    return recommendations
+
+@app.post("/api/personal/theme")
+async def set_theme(theme: str = Query("light", regex="^(light|dark)$")):
+    """设置主题（模拟）"""
+    return {
+        "message": f"主题已设置为 {theme} 模式",
+        "theme": theme,
+        "timestamp": datetime.now().isoformat(),
+        "ui_changes": [
+            "更新颜色方案",
+            "调整界面对比度",
+            "应用主题相关样式"
+        ]
+    }
+
 # === 启动函数 ===
 
 def start_server(host: str = "0.0.0.0", port: int = 8888):
@@ -522,11 +680,14 @@ def start_server(host: str = "0.0.0.0", port: int = 8888):
     print("   2. 使用 /api/samples/feeds 创建示例订阅源")
     print("   3. 查看API文档了解所有接口")
     
-    print("\n🎭 个性分支功能:")
+    print("\n🎭 个性分支功能 (feature/personalization):")
     print("   ✅ 深色/浅色主题切换")
     print("   ✅ 个性化界面优化")
     print("   ✅ 性能增强")
     print("   ✅ 扩展API接口")
+    print("   📊 个性化统计: /api/personal/stats")
+    print("   🎨 主题设置: /api/personal/theme")
+    print("   📋 功能列表: /api/personal/features")
     
     uvicorn.run(
         "main:app",

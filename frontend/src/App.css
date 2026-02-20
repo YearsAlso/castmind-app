@@ -754,3 +754,206 @@
     width: 100%;
   }
 }
+
+/* ===== 个性化功能样式 ===== */
+
+/* 个性化统计卡片 */
+.stat-card.personal-stat {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+  border: none;
+}
+
+.stat-card.personal-stat h3 {
+  color: white;
+}
+
+.stat-card.personal-stat .stat-value {
+  color: white;
+  font-size: 2.5rem;
+}
+
+.stat-card.personal-stat .stat-detail span {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* 深色模式下的个性化统计卡片 */
+.castmind-app.dark-mode .stat-card.personal-stat {
+  background: linear-gradient(135deg, #3730a3 0%, #5b21b6 100%);
+}
+
+/* 个性化功能展示 */
+.personal-section {
+  margin-top: 2rem;
+  border-left: 4px solid #4f46e5;
+  background: rgba(79, 70, 229, 0.05);
+}
+
+.castmind-app.dark-mode .personal-section {
+  background: rgba(79, 70, 229, 0.1);
+}
+
+.personal-section h3 {
+  color: #4f46e5;
+  margin-bottom: 1rem;
+}
+
+.castmind-app.dark-mode .personal-section h3 {
+  color: #a78bfa;
+}
+
+/* 个性化建议 */
+.recommendations {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.recommendation-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.castmind-app.dark-mode .recommendation-item {
+  background: #2d3748;
+  border-color: #4a5568;
+}
+
+.recommendation-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #4f46e5;
+}
+
+.recommendation-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.recommendation-text {
+  flex: 1;
+  color: #374151;
+}
+
+.castmind-app.dark-mode .recommendation-text {
+  color: #e2e8f0;
+}
+
+/* 功能网格 */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.feature-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+  text-align: center;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.castmind-app.dark-mode .feature-card {
+  background: #2d3748;
+  border-color: #4a5568;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(79, 70, 229, 0.15);
+  border-color: #4f46e5;
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.feature-card h4 {
+  margin: 0.5rem 0;
+  color: #1f2937;
+  font-size: 1.125rem;
+}
+
+.castmind-app.dark-mode .feature-card h4 {
+  color: #f7fafc;
+}
+
+.feature-card p {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  flex: 1;
+}
+
+.castmind-app.dark-mode .feature-card p {
+  color: #a0aec0;
+}
+
+.feature-status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: #10b981;
+  color: white;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+/* 分支徽章 */
+.branch-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(236, 72, 153, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0);
+  }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .recommendation-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+}
