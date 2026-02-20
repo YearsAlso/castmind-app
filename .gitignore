@@ -1,0 +1,86 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project specific
+backend/castmind.db
+frontend/dist/
+*.log
+*.pid
+
+# Temporary files
+temp/
+tmp/
+
+# Build outputs
+*.exe
+*.dll
+*.so
+*.dylib
+*.class
+
+# Test outputs
+coverage/
+.nyc_output
+
+# Documentation
+_site/
+.sass-cache/
+.jekyll-metadata
+
+# Local config files
+config.local.*
+secrets.*
