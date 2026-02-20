@@ -199,6 +199,48 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8888
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
 5. 创建 Pull Request
 
+## 🌿 GitFlow 分支结构
+
+本项目使用 GitFlow 工作流进行版本管理：
+
+### 主要分支
+- **`main`** - 生产分支，包含稳定版本
+- **`develop`** - 开发分支，集成所有功能
+
+### 支持分支
+- **`feature/*`** - 功能分支，从 `develop` 分支创建
+  - 例如：`feature/personalization` - 个性化功能分支
+- **`release/*`** - 发布分支，从 `develop` 分支创建
+- **`hotfix/*`** - 热修复分支，从 `main` 分支创建
+
+### 当前分支状态
+- ✅ `main` - 稳定版本 (v1.0.0)
+- ✅ `develop` - 开发版本 (包含基础功能)
+- ✅ `feature/personalization` - 个性化功能分支 (已推送)
+- ⏳ `release/v1.1.0` - 计划中的发布分支
+- ⏳ `hotfix/*` - 暂无热修复
+
+### 开发流程示例
+```bash
+# 1. 从develop创建功能分支
+git checkout develop
+git checkout -b feature/your-feature
+
+# 2. 开发并提交功能
+git add .
+git commit -m "feat: 添加新功能"
+
+# 3. 推送功能分支
+git push -u origin feature/your-feature
+
+# 4. 创建Pull Request到develop分支
+# 在GitHub上创建PR: feature/your-feature → develop
+
+# 5. 合并后删除本地分支
+git checkout develop
+git branch -d feature/your-feature
+```
+
 ## 📄 许可证
 
 本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情
